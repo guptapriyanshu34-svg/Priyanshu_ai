@@ -1,59 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL | AI VIDEO GEN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PRIYANSHU AI | PREMIUM GEN</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; overflow: hidden; }
-        .terminal { border: 2px solid #0f0; width: 90%; max-width: 600px; margin: 50px auto; padding: 20px; box-shadow: 0 0 20px #0f0; position: relative; }
-        input { background: transparent; border: 1px solid #0f0; color: #0f0; width: 100%; padding: 10px; margin: 10px 0; outline: none; }
-        button { background: #0f0; color: #000; border: none; padding: 10px 20px; width: 100%; cursor: pointer; font-weight: bold; }
-        #status { margin-top: 15px; font-size: 14px; }
-        video { width: 100%; margin-top: 20px; display: none; border: 1px solid #0f0; }
-        .glitch { animation: glitch 1s linear infinite; }
-        @keyframes glitch { 2% { color: #f0f; } 5% { color: #0ff; } 10% { color: #0f0; } }
+        * { box-sizing: border-box; }
+        body { 
+            background: #000; 
+            color: #0f0; 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 0; 
+            padding: 10px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container { 
+            border: 2px solid #0f0; 
+            width: 100%; 
+            max-width: 450px; /* Mobile width optimized */
+            padding: 20px; 
+            box-shadow: 0 0 25px #0f0; 
+            background: rgba(0, 20, 0, 0.9);
+        }
+        .header { 
+            font-size: 20px; 
+            text-align: center;
+            text-shadow: 0 0 10px #0f0; 
+            border-bottom: 2px solid #0f0; 
+            padding-bottom: 15px; 
+            margin-bottom: 20px; 
+            font-weight: bold;
+        }
+        .status-bar { font-size: 11px; margin-bottom: 15px; line-height: 1.5; color: #8f8; }
+        
+        input { 
+            background: #000; 
+            border: 1px solid #0f0; 
+            color: #0f0; 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            outline: none; 
+            font-size: 16px; /* Bada font keyboard ke liye */
+        }
+        
+        button { 
+            background: #0f0; 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            width: 100%; 
+            font-weight: bold; 
+            cursor: pointer; 
+            letter-spacing: 2px; 
+            font-size: 16px;
+            box-shadow: 0 0 10px #0f0;
+        }
+        
+        button:active { background: #003300; color: #0f0; }
+        
+        #videoPlayer { 
+            width: 100%; 
+            margin-top: 25px; 
+            border: 1px solid #0f0; 
+            display: none; 
+            border-radius: 5px;
+        }
+        
+        #loading { 
+            display: none; 
+            margin-top: 20px; 
+            color: #ff0; 
+            text-align: center;
+            font-size: 14px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="terminal">
-        <h2 class="glitch">AI_VIDEO_ENGINE_V1.0</h2>
-        <p>> SYSTEM: ONLINE</p>
-        <p>> ACCESS_LEVEL: PREMIUM_USER</p>
-        <hr color="#0f0">
-        <input type="text" id="prompt" placeholder="ENTER_COMMAND (e.g. Mahadev Cinematic)...">
-        <button onclick="startGen()">EXECUTE_GENERATION</button>
-        <div id="status">_WAITING_FOR_INPUT...</div>
-        <video id="videoOut" controls></video>
+    <div class="container">
+        <div class="header">PRIYANSHU_CORE_v2.1</div>
+        <div class="status-bar">
+            [SYS]: ONLINE <br>
+            [UNIT]: SAMSUNG_A15_5G <br>
+            [MODE]: PREMIUM_VIDEO_GEN
+        </div>
+        
+        <input type="text" id="userPrompt" placeholder="ENTER PROMPT (e.g. Mahadev 3D)...">
+        
+        <button onclick="generateVideo()">[ EXECUTE_SYSTEM ]</button>
+        
+        <div id="loading">... BYPASSING_LIMITS ...<br>GENERATING_VIDEO_STREAM...</div>
+        
+        <video id="videoPlayer" controls autoplay></video>
+        
+        <div style="margin-top: 25px; font-size: 9px; text-align: center; color: #666;">
+            SECURE ACCESS GRANTED // NO_LOGS_KEPT
+        </div>
     </div>
 
     <script>
-        async function startGen() {
-            const prompt = document.getElementById('prompt').value;
-            const status = document.getElementById('status');
-            const video = document.getElementById('videoOut');
+        async function generateVideo() {
+            const prompt = document.getElementById('userPrompt').value;
+            const video = document.getElementById('videoPlayer');
+            const loading = document.getElementById('loading');
             
-            status.innerText = "> BYPASSING_FIREWALLS... [RUNNING]";
-            
+            if(!prompt) { alert("Prompt likho bhai!"); return; }
+
+            loading.style.display = 'block';
+            video.style.display = 'none';
+
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
-                    body: JSON.stringify({ prompt: prompt }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
                 });
 
-                if(response.ok) {
+                if (response.ok) {
                     const blob = await response.blob();
-                    video.src = URL.createObjectURL(blob);
+                    const videoUrl = URL.createObjectURL(blob);
+                    video.src = videoUrl;
                     video.style.display = 'block';
-                    status.innerText = "> PROCESS_COMPLETE. FILE_DECRYPTED.";
+                    loading.style.display = 'none';
                 } else {
-                    status.innerText = "> ERROR: SERVER_TIMEOUT (Check API Key)";
+                    alert("API Busy or Timeout. 30 sec baad phir try karein.");
+                    loading.style.display = 'none';
                 }
             } catch (e) {
-                status.innerText = "> FATAL_ERROR: CONNECTION_LOST";
+                alert("Connection Error.");
+                loading.style.display = 'none';
             }
         }
     </script>
 </body>
 </html>
-
