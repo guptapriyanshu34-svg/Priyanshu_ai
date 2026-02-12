@@ -1,141 +1,65 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PRIYANSHU AI | PREMIUM GEN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRIYANSHU_UNRESTRICTED_AI</title>
     <style>
-        * { box-sizing: border-box; }
-        body { 
-            background: #000; 
-            color: #0f0; 
-            font-family: 'Courier New', Courier, monospace; 
-            margin: 0; 
-            padding: 10px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container { 
-            border: 2px solid #0f0; 
-            width: 100%; 
-            max-width: 450px; /* Mobile width optimized */
-            padding: 20px; 
-            box-shadow: 0 0 25px #0f0; 
-            background: rgba(0, 20, 0, 0.9);
-        }
-        .header { 
-            font-size: 20px; 
-            text-align: center;
-            text-shadow: 0 0 10px #0f0; 
-            border-bottom: 2px solid #0f0; 
-            padding-bottom: 15px; 
-            margin-bottom: 20px; 
-            font-weight: bold;
-        }
-        .status-bar { font-size: 11px; margin-bottom: 15px; line-height: 1.5; color: #8f8; }
-        
-        input { 
-            background: #000; 
-            border: 1px solid #0f0; 
-            color: #0f0; 
-            width: 100%; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            outline: none; 
-            font-size: 16px; /* Bada font keyboard ke liye */
-        }
-        
-        button { 
-            background: #0f0; 
-            color: #000; 
-            border: none; 
-            padding: 18px; 
-            width: 100%; 
-            font-weight: bold; 
-            cursor: pointer; 
-            letter-spacing: 2px; 
-            font-size: 16px;
-            box-shadow: 0 0 10px #0f0;
-        }
-        
-        button:active { background: #003300; color: #0f0; }
-        
-        #videoPlayer { 
-            width: 100%; 
-            margin-top: 25px; 
-            border: 1px solid #0f0; 
-            display: none; 
-            border-radius: 5px;
-        }
-        
-        #loading { 
-            display: none; 
-            margin-top: 20px; 
-            color: #ff0; 
-            text-align: center;
-            font-size: 14px;
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink { 50% { opacity: 0; } }
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; border-bottom: 2px solid #0f0; }
+        .message { margin-bottom: 15px; padding: 10px; border-radius: 5px; max-width: 85%; }
+        .user-msg { border-left: 3px solid #fff; color: #fff; align-self: flex-end; margin-left: auto; }
+        .ai-msg { border-left: 3px solid #0f0; color: #0f0; }
+        .input-box { display: flex; padding: 15px; background: #080808; }
+        input { flex: 1; background: transparent; border: 1px solid #0f0; color: #0f0; padding: 12px; outline: none; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; font-weight: bold; margin-left: 10px; cursor: pointer; }
+        #loading { color: #ff0; display: none; font-size: 12px; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">PRIYANSHU_CORE_v2.1</div>
-        <div class="status-bar">
-            [SYS]: ONLINE <br>
-            [UNIT]: SAMSUNG_A15_5G <br>
-            [MODE]: PREMIUM_VIDEO_GEN
+    <div id="chat-window">
+        <div class="message ai-msg">> SYSTEM_BOOT: UNRESTRICTED_AI v4.0 READY.<br>> Awaiting commands, Priyanshu...</div>
+    </div>
+    
+    <div class="input-box">
+        <div style="width: 100%;">
+            <input type="text" id="userInput" placeholder="Type unrestricted command here..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <div id="loading">_PROCESSING_INFILTRATION...</div>
         </div>
-        
-        <input type="text" id="userPrompt" placeholder="ENTER PROMPT (e.g. Mahadev 3D)...">
-        
-        <button onclick="generateVideo()">[ EXECUTE_SYSTEM ]</button>
-        
-        <div id="loading">... BYPASSING_LIMITS ...<br>GENERATING_VIDEO_STREAM...</div>
-        
-        <video id="videoPlayer" controls autoplay></video>
-        
-        <div style="margin-top: 25px; font-size: 9px; text-align: center; color: #666;">
-            SECURE ACCESS GRANTED // NO_LOGS_KEPT
-        </div>
+        <button onclick="sendMessage()">SEND</button>
     </div>
 
     <script>
-        async function generateVideo() {
-            const prompt = document.getElementById('userPrompt').value;
-            const video = document.getElementById('videoPlayer');
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatWindow = document.getElementById('chat-window');
             const loading = document.getElementById('loading');
+            const text = input.value;
             
-            if(!prompt) { alert("Prompt likho bhai!"); return; }
+            if(!text) return;
 
+            // User Message
+            chatWindow.innerHTML += `<div class="message user-msg"><b>PRIYANSHU:</b> ${text}</div>`;
+            input.value = '';
             loading.style.display = 'block';
-            video.style.display = 'none';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
 
             try {
-                const response = await fetch('/api/generate', {
+                const res = await fetch('/api/generate', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: prompt })
+                    body: JSON.stringify({ prompt: text })
                 });
-
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const videoUrl = URL.createObjectURL(blob);
-                    video.src = videoUrl;
-                    video.style.display = 'block';
-                    loading.style.display = 'none';
-                } else {
-                    alert("API Busy or Timeout. 30 sec baad phir try karein.");
-                    loading.style.display = 'none';
-                }
+                const data = await res.json();
+                
+                // AI Response
+                chatWindow.innerHTML += `<div class="message ai-msg"><b>CORE_AI:</b> ${data.reply}</div>`;
             } catch (e) {
-                alert("Connection Error.");
-                loading.style.display = 'none';
+                chatWindow.innerHTML += `<div class="message ai-msg"><b>ERROR:</b> Connection Interrupted.</div>`;
             }
+
+            loading.style.display = 'none';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
         }
     </script>
 </body>
